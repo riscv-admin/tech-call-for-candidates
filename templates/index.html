@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technical Sessions | Call for Presenters</title>
+    <link rel="icon" href="/static/images/favicon.ico" type="image/x-icon">
+    <style>
+        body, input, select, textarea, button {
+            font-family: 'Open Sans', sans-serif;
+            color: #282828;
+        }
+
+        .container {
+            background-color: white;
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .error-message {
+            color: red;
+            text-align: center;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+        h1 {
+            color: #202124;
+        }
+
+        .header {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .header img {
+            max-width: 100%; /* Ensures the image is responsive */
+            height: auto;
+        }
+
+        label {
+            color: #555; /* Slightly lighter shade for labels */
+        }
+
+        input[type=text],
+        input[type=date],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type=checkbox] {
+            margin-right: 10px;
+        }
+
+        input[type=submit] {
+            width: 100%;
+            background-color: #4CAF50; /* Keep the button color or change as needed */
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        input[type=submit]:hover {
+            background-color: #45a049;
+        }
+
+        .date-label, .date-input {
+            display: inline-block;
+            margin-right: 10px; /* Adjust spacing as needed */
+        }
+
+        .date-input {
+            margin-bottom: 10px; /* Spacing between each date field */
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media screen and (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Display Flask flash messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="{{ 'error-message' if category == 'error' else '' }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+        <div class="header">
+            <img src="/static/images/riscv.png" alt="RISC-V Logo">
+            <h1>RISC-V Groups | Call for Candidates</h1>
+        </div>
+        <form action="/submit" method="post">
+            <label for="requestorEmail">Your Email:</label>
+            <input type="text" id="requestorEmail" name="requestorEmail" placeholder="How can we get in touch with you if we need more info?" required><br>
+        
+            <label for="groupName">Group Name:</label>
+            <input type="text" id="groupName" name="groupName" placeholder="Name of the group needing a new Chair and/or Vice-chair." required><br>
+        
+            <label for="groupType">Group Type:</label>
+            <select id="groupType" name="groupType" required>
+                <option value="" disabled selected>Select a Group Type</option>
+                <option value="ISA Committee (IC)">ISA Committee (IC)</option>
+                <option value="Horizontal Committee (HC)">Horizontal Committee (HC)</option>
+                <option value="Special Interest Group (SIG)">Special Interest Group (SIG)</option>
+                <option value="Task Group (TG)">Task Group (TG)</option>
+            </select><br>
+        
+            <label for="positions">Positions:</label>
+            <select id="positions" name="positions" required>
+                <option value="" disabled selected>Select a Position</option>
+                <option value="Chair">Chair</option>
+                <option value="Vice-Chair">Vice-Chair</option>
+                <option value="Chair and Vice-Chair">Chair and Vice-Chair</option>
+            </select><br>
+        
+            <label for="governingCommittee">Governing Committee:</label>
+            <select id="governingCommittee" name="governingCommittee" required>
+                <option value="" disabled selected>Select Governing Committee</option>
+                <option value="Privileged Spec IC">Privileged Spec IC</option>
+                <option value="Unprivileged Spec IC">Unprivileged Spec IC</option>
+                <option value="Application & Tools HC">Application & Tools HC</option>
+                <option value="ISA Infrastructure HC">ISA Infrastructure HC</option>
+                <option value="Privileged Software HC">Privileged Software HC</option>
+                <option value="Security HC">Security HC</option>
+                <option value="SOC Infrastructure HC">SOC Infrastructure HC</option>
+                <option value="Technology HC">Technology HC</option>
+                <option value="TSC">TSC</option>
+            </select><br>
+        
+            <label for="dottedLineCommittee">Dotted-Line Governing Committee:</label>
+            <select id="dottedLineCommittee" name="dottedLineCommittee" required>
+                <option value="" disabled selected>Select Dotted-Line Governing Committee</option>
+                <option value="Privileged Spec IC">Privileged Spec IC</option>
+                <option value="Unprivileged Spec IC">Unprivileged Spec IC</option>
+                <option value="Application & Tools HC">Application & Tools HC</option>
+                <option value="ISA Infrastructure HC">ISA Infrastructure HC</option>
+                <option value="Privileged Software HC">Privileged Software HC</option>
+                <option value="Security HC">Security HC</option>
+                <option value="SOC Infrastructure HC">SOC Infrastructure HC</option>
+                <option value="Technology HC">Technology HC</option>
+            </select><br>
+        
+            <label for="techQuali">Required Technical Qualifications:</label>
+            <textarea id="techQuali" name="techQuali" placeholder="Specific set of technical skills, knowledge, and experience that a candidate must possess to be considered eligible for the role." required></textarea><br>
+        
+            <label for="groupCharter">Group Charter:</label>
+            <textarea id="groupCharter" name="groupCharter" placeholder="Enter the group's Jira link, a link to the detailed Charter, or provide a brief description of the Charter here." required></textarea><br>
+        
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+</body>
+
+</html>
