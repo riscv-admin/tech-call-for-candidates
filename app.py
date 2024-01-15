@@ -1,20 +1,25 @@
-from flask import Flask, request, render_template, redirect, url_for, flash
+import os
 from datetime import datetime, timedelta
-import requests, os
+
+import requests
+from flask import Flask, flash, redirect, render_template, request, url_for
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'a_default_secret_key')
 
-@app.route('/submit', methods=['POST'])
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/call-submit', methods=['POST'])
 def submit_form():
     # Collect form data
     data = request.form
 
     # Check for GitHub token and user
     github_token = os.getenv('GITHUB_TOKEN')
-    github_user = os.getenv('GITHUB_USER')
 
-    if not github_token or not github_user:
+    if not github_token:
         flash("ERROR: Could NOT Open GitHub Issue. \n Please try again or contact help@riscv.org.", "error")
         return redirect(url_for('index'))
 
@@ -107,25 +112,18 @@ Best Regards,
     payload = {
         "title": title,
         "body": body,
-        "assignees": [github_user,],
         "labels": ["call-for-candidates"]
     }
 
     response = requests.post(url, json=payload, headers=headers)
 
-    # Inside your submit_form function in Flask app
     if response.status_code == 201:
-        return redirect(url_for('success'))
+        flash("Your submission was successful!", "success") 
+        return redirect('/')
     else:
-        flash("ERROR: Could NOT Open GitHub Issue. \n Please try again or contact help@riscv.org.", "error")
-
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/success')
-def success():
-    return render_template('success.html') 
+        # Handle other status codes
+        flash(f"ERROR: Could NOT Open GitHub Issue. Status Code: {response.status_code}. \n Please try again or contact help@riscv.org.", "error")
+        return redirect('/')
 
 if __name__ == '__main__':
     app.run(debug=True)
